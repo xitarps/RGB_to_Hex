@@ -1,0 +1,200 @@
+
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+
+<div class="texto-saidaR">aguardando entrada...</div>	
+<div class="texto-saidaG">aguardando entrada...</div>
+<div class="texto-saidaB">aguardando entrada...</div>
+<div class="texto-saida">aguardando calculo para apresentar resultado...</div>
+
+
+<div>
+<input type="range" min="0" max="255" step="1" class="barra-Tr">
+<input type="range" min="0" max="255" step="1" class="barra-Tg">
+<input type="range" min="0" max="255" step="1" class="barra-Tb">
+</div>
+<input type="text" class="texto-entrada-r">
+<input type="text" class="texto-entrada-g">
+<input type="text" class="texto-entrada-b">
+
+<button class="botao">calc</button>
+<script>
+
+var r,g,b;
+var hex;
+var rTemp,gTemp,bTemp;
+
+var rolanteR = document.querySelector(".barra-Tr");
+var rolanteG = document.querySelector(".barra-Tg");
+var rolanteB = document.querySelector(".barra-Tb");
+
+var botao = document.querySelector(".botao");
+
+var resposta="";
+
+rolanteR.oninput = roladoR;
+rolanteG.oninput = roladoG;
+rolanteB.oninput = roladoB;
+
+
+botao.addEventListener("click",clicado);
+
+
+function mostraMsg(inTXT,rzinho)
+{
+//console.log(rzinho);
+	if(rzinho=="r")
+	{
+		var txtOutputR = document.querySelector(".texto-saidaR"); 
+		txtOutputR.innerHTML = inTXT;
+	}
+	else if(rzinho=="g")
+	{
+		var txtOutputG = document.querySelector(".texto-saidaG"); 
+		txtOutputG.innerHTML = inTXT;
+	}
+	else if(rzinho=="b")
+	{
+		var txtOutputB = document.querySelector(".texto-saidaB"); 
+		txtOutputB.innerHTML = inTXT;
+	}
+	else if(rzinho=="saida")
+	{
+		var txtOutputB = document.querySelector(".texto-saida"); 
+		txtOutputB.innerHTML = inTXT;
+	}
+	
+	
+}
+function roladoR()//manipula os dados vindos do "range" red
+{
+	//console.log(rolanteR.value);
+	mostraMsg(rolanteR.value,"r");
+	var textostyler = document.querySelector(".texto-entrada-r");
+	textostyler.value = rolanteR.value;
+}
+function roladoG()//manipula os dados vindos do "range" green
+{
+	//console.log(rolanteG.value);
+	mostraMsg(rolanteG.value,"g");
+	var textostyleg = document.querySelector(".texto-entrada-g");
+	textostyleg.value= rolanteG.value;
+}
+function roladoB()//manipula os dados vindos do "range" blue
+{
+	//console.log(rolanteB.value);
+	mostraMsg(rolanteB.value,"b");
+	var textostyleb = document.querySelector(".texto-entrada-b");
+	textostyleb.value = rolanteB.value;
+}
+
+//quando botao é clicado essa classe é executada / main!
+function clicado()
+{
+	//busca valores de entrada e organiza seus 0's
+	var rT = document.querySelector(".texto-entrada-r").value;
+	rT = ajustaZeros(rT);
+	var gT = document.querySelector(".texto-entrada-g").value;
+	gT = ajustaZeros(gT);
+	var bT = document.querySelector(".texto-entrada-b").value;
+	bT = ajustaZeros(bT);
+	
+	resposta = rgbToHex(rT,gT,bT);
+	
+	mostraMsg(resposta,"saida");
+	
+}
+
+//pega os valores rg, aplica a funçao de decimal para hex em cada e concatena
+function rgbToHex(rx,gx,bx)
+{
+	var a = decToHex(rx);
+	var b = decToHex(gx);
+	var c = decToHex(bx);
+	
+	var Hex = "#"+a+""+b+""+c;
+	//console.log(Hex);
+	return Hex;
+}
+
+//pega um valor e converte para Hex
+function decToHex(t)
+{
+	var resultSet="";
+	var k=t;
+	var ktemp=k
+	var l=t;
+	
+	//enquanto valor base da conta for diferente de 0 faça.
+	while(k!=0)
+	{
+		k = (k/16).toFixed(4);
+		k = parseInt(k);
+		l = (ktemp%16).toFixed(4);
+		l = parseInt(l);
+		
+		//variavel temporaria para que 'l' nao ude o valor atualizado de k no ciclo
+		ktemp=k;
+		
+		//console.log("valor de k: "+k)
+		//console.log("valor de l: "+l)
+		
+		//se resultado for até nove, retorna o proprio resultado
+		if(l<=9)
+		{
+			
+			
+				if(resultSet.length==0){resultSet=""+l}
+				else if(resultSet.length!=0){resultSet=""+l+""+resultSet}
+			
+		}
+		else if(l>=10) // se resultado for maior que 10(no caso até 15), retorna sua respectiva letra e checa necessidade de adc 0;
+		{
+			if(l==10){if(resultSet.length==0){resultSet=""+"0A"}else if(resultSet.length!=0){resultSet=""+"A"+""+resultSet}}
+			if(l==11){if(resultSet.length==0){resultSet=""+"0B"}else if(resultSet.length!=0){resultSet=""+"B"+""+resultSet}}
+			if(l==12){if(resultSet.length==0){resultSet=""+"0C"}else if(resultSet.length!=0){resultSet=""+"C"+""+resultSet}}
+			if(l==13){if(resultSet.length==0){resultSet=""+"0D"}else if(resultSet.length!=0){resultSet=""+"D"+""+resultSet}}
+			if(l==14){if(resultSet.length==0){resultSet=""+"0E"}else if(resultSet.length!=0){resultSet=""+"E"+""+resultSet}}
+			if(l==15){if(resultSet.length==0){resultSet=""+"0F"}else if(resultSet.length!=0){resultSet=""+"F"+""+resultSet}}
+		}
+		
+	}
+	
+	//se entrada = 0 entao define como 00; 
+	if(k==0)
+	{
+		if(resultSet.length==0){resultSet=""+"00"}
+	}
+	
+	//se valor tiver 3 digitos, remove o num 0
+	if(resultSet.length==3){resultSet = resultSet.replace('0','');}
+	
+	//retorna resultado
+	return resultSet;
+}
+
+// arruma rgb para teem sempre 3 casas
+function ajustaZeros(y)
+{
+	if(y.length==1)
+	{
+		//console.log("uma casa decimal");
+		y = "00"+y;
+		
+	}
+	else if(y.length==2)
+	{
+		//console.log("duas casas decimais");
+		y="0"+y;
+	}
+	else if(y.length==3)
+	{
+		//console.log("tres casas decimais");
+	}else{
+		console.log("erro nas casas decimais");
+	}
+	return y;
+}
+</script>
+</html>

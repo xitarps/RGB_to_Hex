@@ -1,0 +1,87 @@
+<html>
+<meta charset="utf-8">
+
+<div class="texto-saida">calculando...</div>	
+<input type="text" class="texto-entrada">
+
+<button class="botao">calc</button>
+<script>
+	
+	var result;
+	var numInput;
+	var botao; 
+	var input=0;
+	
+	botao = document.querySelector(".botao");
+	
+	
+	botao.addEventListener("click",decToHex);
+	
+	//numInput=15;
+	
+	//result = decToHex(numInput);
+	
+	//console.log(""+numInput+"   convertido em Hex é:  "+result);
+	
+	
+	
+	
+	function decToHex()
+	{
+	input = document.querySelector(".texto-entrada").value;
+	var num = input;
+	var resultRetorno=0;
+	
+	var m=0;
+	
+	var temp=0;
+	var temppre="";
+		while(m<num)
+		{
+				if(num<16)
+				{
+					for(k=0;k<6;k++)
+					{
+					//console.log("m: "+m+" num:"+num);
+						if(m<10)
+						{
+							for(i=0;i<10;i++)
+							{
+								
+								resultRetorno = (""+i);
+								m++;
+								if(m>num){resultRetorno = (""+(i)); break;}
+								//console.log("m: "+m);
+							}
+						}
+						if(m==10){resultRetorno = "0";}
+						
+						
+						//console.log("resultRetorno: "+resultRetorno);
+						if(k==0){temp="A";}
+						if(k==1){temp="B";}
+						if(k==2){temp="C";}
+						if(k==3){temp="D";}
+						if(k==4){temp="E";}
+						if(k==5){temp="F";}
+						if(num<10){temp ="0"}
+						//console.log("temp: "+temp);
+						m++;
+						//console.log("m: "+m+" num:"+num);
+						if(m>num){if(num<10){resultRetorno = (temp+""+resultRetorno); }else{resultRetorno = (resultRetorno+""+temp);} break;}
+
+					}	
+				}
+				console.log(temppre);
+				m++;
+			resultRetorno = temppre+""+resultRetorno;
+			temppre++;
+		}
+		if(resultRetorno=="00"){resultRetorno="09";}
+		
+		var textinhoSaida = document.querySelector(".texto-saida");
+		textinhoSaida.innerHTML = resultRetorno;
+	}
+	
+</script>
+</html>
